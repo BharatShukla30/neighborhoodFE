@@ -1,23 +1,3 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-
-// function Header() {
-//     return (
-//         <header>
-//             <h1>My Website</h1>
-//             <nav>
-//                 <ul>
-//                     <li><Link to="/">Home</Link></li>
-//                     <li><Link to="/signup">Sign Up</Link></li>
-//                     <li><a href="/contact">Contact</a></li>
-//                 </ul>
-//             </nav>
-//         </header>
-//     );
-// }
-
-// export default Header;
-
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -31,11 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import BloodtypeIcon from '@mui/icons-material/Bloodtype';
+import RoofingIcon from '@mui/icons-material/Roofing';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -73,7 +51,7 @@ function ResponsiveAppBar() {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <BloodtypeIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    <RoofingIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Link to="/" className='logo-link'>
                     <Typography
                         variant="h6"
@@ -90,7 +68,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        BLOOD BANK
+                        NEIGHBORHOOD
                     </Typography>
                     </Link>
 
@@ -128,7 +106,7 @@ function ResponsiveAppBar() {
                             </MenuItem>
                         </Menu>
                     </Box>
-                    <BloodtypeIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                    <RoofingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
@@ -145,7 +123,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        BLOOD BANK
+                        NEIGHBORHOOD
                     </Typography>
                     <Box sx={{ flexGrow: 1, justifyContent: 'flex-end', display: { xs: 'none', md: 'flex' } }}>
                         <Button

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,10 +12,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import { Alert, AlertTitle, FormControl, FormHelperText, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
+import { Alert, AlertTitle, FormControl, FormHelperText, FormLabel, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
 import { registerUser } from './actions';
 import { useDispatch, useSelector } from 'react-redux';
 import Copyright from '../UIUtils/Copyright';
+import { getCurrentYYYYMMDD, getLocation } from '../../services/common';
+import { AccountCircle } from '@mui/icons-material';
 
 const theme = createTheme();
 
@@ -27,22 +29,31 @@ export default function SignUpPage() {
 
   const signUpReducerState = useSelector(signUpSelector);
 
+  const [userCoordinates, setUserCoordinates] = useState();
+
   const [formData, setFormData] = React.useState({
     fullName: '',
     email: '',
-    blood_group: '',
-    user_type: 'individual',
-    address: '',
+    username: '',
+    location: '',
     password: '',
+    dateOfBirth: getCurrentYYYYMMDD()
   });
+
+  useEffect(() => {
+    getLocation(setUserCoordinates);
+  }, [])
+
+  console.log("Latitude is :", userCoordinates?.latitude);
+  console.log("Longitude is :", userCoordinates?.longitude);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const requestBody = {
       name: formData.fullName,
       email: formData.email,
-      blood_group: formData.blood_group,
-      user_type: formData.user_type,
+      username: formData.username,
+      dob: formData.dateOfBirth,
       location: formData.address,
       password: formData.password
     };
@@ -147,90 +158,65 @@ export default function SignUpPage() {
                 <TextField
                   required
                   fullWidth
-                  name="address"
-                  label="Address"
-                  id="address"
-                  autoComplete="address"
-                  value={formData.address}
+                  name="username"
+                  label="Username"
+                  id="username"
+                  autoComplete="username"
+                  value={formData.username}
                   onChange={(event) => {
                     setFormData((formData) => {
                       return {
                         ...formData,
-                        address: event.target.value
+                        username: event.target.value
+                      }
+                    })
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <AccountCircle />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  type='date'
+                  required
+                  fullWidth
+                  name="dateOfBirth"
+                  label="Date Of Birth"
+                  id="dateOfBirth"
+                  autoComplete="dateOfBirth"
+                  value={formData.dateOfBirth}
+                  onChange={(event) => {
+                    setFormData((formData) => {
+                      return {
+                        ...formData,
+                        dateOfBirth: event.target.value
                       }
                     })
                   }}
                 />
               </Grid>
-
-              <Grid item xs={12}>
-                <FormControl required>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Type</FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    value={formData.user_type}
-                    onChange={(event) => {
-                      setFormData((formData) => {
-                        return {
-                          ...formData,
-                          user_type: event.target.value
-                        }
-                      })
-                    }}
-                  >
-                    <FormControlLabel value="individual" control={<Radio />} label="Individual" />
-                    <FormControlLabel value="organization" control={<Radio />} label="Organization" />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <InputLabel>Blood Group *</InputLabel>
-                <FormControl fullWidth>
-                  <Select
-                    value={formData.blood_group}
-                    onChange={(event) => {
-                      setFormData((formData) => {
-                        return {
-                          ...formData,
-                          blood_group: event.target.value
-                        }
-                      })
-                    }}
-                    placeholder='blood'
-                    displayEmpty
-                    required
-                  >
-                    <MenuItem value='A+'>A+</MenuItem>
-                    <MenuItem value='A-'>A-</MenuItem>
-                    <MenuItem value='B+'>B+</MenuItem>
-                    <MenuItem value='B-'>B-</MenuItem>
-                    <MenuItem value='O+'>O+</MenuItem>
-                    <MenuItem value='O-'>O-</MenuItem>
-                    <MenuItem value='AB+'>AB+</MenuItem>
-                    <MenuItem value='AB-'>AB-</MenuItem>
-                    <MenuItem value='All'>All</MenuItem>
-                  </Select>
-                  <FormHelperText>All - Only for Organizations</FormHelperText>
-                </FormControl>
-              </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="I agree to the Terms & Conditions"
                 />
               </Grid>
             </Grid>
             <Button
               type="submit"
               fullWidth
+              disabled={!userCoordinates}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
             </Button>
+            {!userCoordinates && <Alert severity="warning">Geolocation must be enabled in browser to proceed</Alert>}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link to="/signin" className='custom-link-style' variant="body2">
