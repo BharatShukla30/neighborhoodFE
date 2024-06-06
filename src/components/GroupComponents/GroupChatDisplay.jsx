@@ -53,11 +53,7 @@ const GroupChatDisplay = (props) => {
 
   useEffect(()=>{
     const fetchNextPageOfMsg = () => {
-      const obj = {
-        groupId: activeChat.group_id,
-        viewPage: viewPage,
-      }
-      dispatch(fetchGroupMessages(obj)).then((result) => {
+      dispatch(fetchGroupMessages(activeChat.group_id)).then((result) => {
             setMessages([...result.payload, ...messages]);
       });
     }
@@ -131,7 +127,9 @@ const GroupChatDisplay = (props) => {
               ?.slice()
               .reverse()
               .map((msg, index) => {
-                // const isLastMessage = messages.length - 1 === index;
+
+                const isLastMessage = messages.length - 1 === index;
+
                 return (
                   <div
                     className={`flex ${
@@ -163,7 +161,9 @@ const GroupChatDisplay = (props) => {
                             : msg.senderName}
                         </h1>
                         <p className="block text-sm font-normal py-1 ps-2 pe-3 text-left  ">
-                          {msg.msg}
+                           {
+                            (msg.msg ? (msg.msg) :(<img className="h-36" src={msg.mediaLink}/>))
+                           }
                         </p>
                         <p className="text-[11px] font-thin text-right ps-1">
                           <span className=" pr-1 text-gray-500 dark:text-gray-400 text-right">

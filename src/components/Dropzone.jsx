@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-function Dropzone() {
+function Dropzone({callHandleImageMessageSubmit}) {
   const [files, setFiles] = useState([])
   
   const [open, setOpen] = useState(false);
@@ -59,14 +59,24 @@ function Dropzone() {
   }
   
   const uploadtoS3 = async (files) => {
-    console.log(files)
-    // S3 logic here
-    setTimeout(() => {
-     
-      setFiles([])
-    }, 3000);
 
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    
+    const response = await fetch("http://localhost:5000/user/upload-file", {
+        method: "POST",
+        body: formData
+    });
+
+    const res = await response.json();
+    
+    callHandleImageMessageSubmit(res);
+    
+    setTimeout(() => {
+        setFiles([]);
+    }, 3000);
   }
+
  
   const uploadFiles = () => {
     

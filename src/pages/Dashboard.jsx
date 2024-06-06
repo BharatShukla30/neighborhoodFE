@@ -139,11 +139,10 @@ const Dashboard = () => {
       dispatch(fetchGroupDetails(activeChat.group_id)).then((result) => {
         setGroupDetails(result.payload);
       });
-      const obj = {
-        groupId: activeChat.group_id,
-        viewPage: 0
-      }
-      dispatch(fetchGroupMessages(obj)).then((result) => {
+
+      
+      dispatch(fetchGroupMessages(activeChat.group_id)).then((result) => {
+        console.log(result)
         setMessages([...result.payload]);
       });
       joinRoom();
